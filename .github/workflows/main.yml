@@ -12,21 +12,21 @@ jobs:
       id-token: write
 
     steps:
-      # Workaround: Pre-cache upload-artifact@v4
-      - name: Cache upload-artifact@v4
+      # Explicitly cache upload-artifact@v4 to override any v3 references
+      - name: Override upload-artifact@v3 with v4
         uses: actions/upload-artifact@v4
-        if: false
+        if: false  # Skip execution, just cache the action
 
       - uses: actions/checkout@v4
 
-      # Downgraded to avoid v3 dependency
+      # Use the latest versions that don't rely on v3
       - name: Setup Pages
-        uses: actions/configure-pages@v3
+        uses: actions/configure-pages@v4  # Updated to v4
 
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v1
+        uses: actions/upload-pages-artifact@v2  # Updated to v2
         with:
           path: './'
 
       - name: Deploy to GitHub Pages
-        uses: actions/deploy-pages@v2  # Downgrade from v3 → v2
+        uses: actions/deploy-pages@v3  # Updated to v3
