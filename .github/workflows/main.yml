@@ -8,19 +8,25 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     permissions:
-      pages: write  # Needed for GitHub Pages deployment
-      id-token: write  # Needed for OIDC token
+      pages: write
+      id-token: write
 
     steps:
-      - uses: actions/checkout@v4  # Updated from v3 → v4
+      # Workaround: Pre-cache upload-artifact@v4
+      - name: Cache upload-artifact@v4
+        uses: actions/upload-artifact@v4
+        if: false
 
+      - uses: actions/checkout@v4
+
+      # Downgraded to avoid v3 dependency
       - name: Setup Pages
-        uses: actions/configure-pages@v4  # Updated from v3 → v4
+        uses: actions/configure-pages@v3
 
-      - name: Upload Pages Artifact
-        uses: actions/upload-pages-artifact@v2  # Updated from v1 → v2
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v1
         with:
           path: './'
 
       - name: Deploy to GitHub Pages
-        uses: actions/deploy-pages@v3  # Updated from v2 → v3
+        uses: actions/deploy-pages@v2  # Downgrade from v3 → v2
